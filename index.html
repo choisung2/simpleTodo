@@ -10,13 +10,12 @@
 </head>
 <body>
   <header>
-    <h1>To-Do</h1>
+    <h1><span class="title">ToDo</span></h1>
     <nav class="btn-wrap">
-      <button class="btn-basic">기본</button>
-      <button class="btn-basic">🌸</button>
-      <button class="btn-basic">✔</button>
-      <button class="btn-basic">🔥</button>
-      <button class="btn-plus">➕</button>
+      <button data-menu-name="important" class="menu-btn">✔ Important</button>
+      <button data-menu-name="study" class="menu-btn">📚 Study</button>
+      <button data-menu-name="life" class="menu-btn">😊 Life</button>
+      <button data-menu-name="plus" class="plus-btn">➕</button>
     </nav>
   </header>
   <section class="wrap">
@@ -28,6 +27,6 @@
     <p class="todo-count">할 일 목록: <span class="list-count">0</span>개</p>
     <ul id="todo-list"></ul>
   </section>
-  <script src="app01.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

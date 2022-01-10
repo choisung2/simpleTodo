@@ -1,11 +1,18 @@
-
 body {
   background: linear-gradient(90deg, #a1c4fd 0%, #c2e9fb 100%);
 }
 
 h1 {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 20px;
+  height: 80px;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 110px;
+  color: #ffffffcc;
+  font-weight: 700;
 }
 
 .btn-wrap {
@@ -18,7 +25,7 @@ h1 {
 
 .btn-wrap button {
   background-color: #f4f7fc;
-  width: 60px;
+  padding: 2px 10px;
   line-height: 25px;
   cursor: pointer;
   border: none;
@@ -26,18 +33,23 @@ h1 {
   border-radius: 2px;
   margin-right: 20px;
   margin-top: 12px;
-  box-shadow:0 2px 2px 0 rgba(27, 27, 27, 0.137);
+  box-shadow: 0 2px 2px 0 rgba(27, 27, 27, 0.137);
+}
+
+.btn-select {
+  background-color: aquamarine;
+  border: 1px solid black;
 }
 
 .wrap {
-	margin: 30px auto;
+  margin: 30px auto;
   padding-bottom: 30px;
-	max-width: 550px;
-	min-height: 650px;
+  max-width: 550px;
+  min-height: 650px;
   border-radius: 10px;
   background-color: #f4f7fc;
-	box-shadow: 0 12px 15px 0 rgba(27, 27, 27, 0.24),
-  0 17px 50px 0 rgba(27, 27, 27, 0.24);
+  box-shadow: 0 12px 15px 0 rgba(27, 27, 27, 0.24),
+    0 17px 50px 0 rgba(27, 27, 27, 0.24);
   position: relative;
 }
 
@@ -46,22 +58,20 @@ h1 {
 }
 
 .label {
-	color: rgba(59, 59, 59, 0.623);
-  /* font-weight: 700; */
-	font-size: 13px;
+  color: rgba(59, 59, 59, 0.623);
+  font-size: 13px;
   margin-left: 50px;
-  /* text-decoration: underline; */
 }
 
 #list {
-	width: 70%;
-	display:block;
+  width: 70%;
+  display: block;
   padding: 15px 20px;
   border-radius: 5px;
   margin: 20px auto 40px;
   border: none;
-  background:rgba(255, 255, 255, 0.562);
-  box-shadow:0 5px 7px 0 rgba(27, 27, 27, 0.137);
+  background: rgba(255, 255, 255, 0.562);
+  box-shadow: 0 5px 7px 0 rgba(27, 27, 27, 0.137);
 }
 
 .submit {
