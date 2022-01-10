@@ -1,131 +1,174 @@
-//HTML element를 가져올 때 $를 관용적으로 사용한다. 재사용이 목적
-const $ = (selector) => document.querySelector(selector);
-// const $ = function query (selector) {
-//   return document.querySelector(selector);
-// }
+//date display
+const inputLabel = document.querySelector('.label')
 
-const store = {
-  setLocalStorage(listUp) {
-    localStorage.setItem("listUp", JSON.stringify(listUp))
+const today = new Date();
+const yaer = today.getFullYear();
+const month = today.getMonth() + 1;
+const date = today.getDate();
+const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const day = weekday[today.getDay()];
+
+inputLabel.innerText = yaer + '/' + month + '/' + date + '/' + day;
+// inputLabel.innerText = today.toLocaleDateString();
+
+
+//formTag auto submit prohibit
+const formWrap = document.querySelector('.input-wrap')
+
+formWrap.addEventListener("submit", (e) => {
+  e.preventDefault()
+})
+
+
+//localStorage
+const storage = {
+  setLocalStorage(list) {
+    localStorage.setItem("list", JSON.stringify(list))
   },
   getLocalStorage() {
-    localStorage.getItem("listUp");
-  }
+    return JSON.parse (localStorage.getItem("list"))
+  } 
 }
 
-
-  let today = new Date();
-  let yaer = today.getFullYear();
-  let month = today.getMonth() + 1;
-  let date = today.getDate();
-  let weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  let day = weekday[today.getDay()];
-  
-  
-  $(".label").innerText = yaer + '/' + month + '/' + date + '/' + day;
-
-
-function App () {
-
-  
-  this.listUp = [];
-  const updatedListCount = () => {
-    const listCount = $("#todo-list").querySelectorAll("li").length
-    $(".list-count").innerText = `${listCount}`
-  }
-  
-  // const doneListCount = () => {
-  //   const listCount = $("#todo-list").querySelectorAll("li").length
-  //   // const a = $("#todo-list").querySelector(".done").length
-  //   $(".list-count").innerText = parseInt(`${listCount}`- 1);
-  // }
-
-  // const doneListCount1 = () => {
-  //   const doneCount = $("#todo-list").querySelector(".done")
-  //   $(".list-count").innerText = `${listCount}`;
-  // }
-
-  const editedItemName = (e) => {
-    const item = e.target.closest("li").dataset.item;
-    const $itemName = e.target.closest("li").querySelector(".item-name");
-    const updatedItemName = prompt("메뉴명을 수정하세요", $itemName.innerText);
-    this.listUp[item].name = updatedItemName;
-    store.setLocalStorage(this.item);
-    $itemName.innerText = updatedItemName;
+function App() {
+  //localStorage render
+  this.list = {
+    important: [],
+    study: [],
+    life: [],
   }
 
-  const removeItemName = (e) => {
-    if (confirm("정말 삭제하시겠습니까?")) {
-        e.target.closest("li").remove();
-        updatedListCount();
-      }
-  }
+  this.currentMenu = "important"
 
-  const doneItemName = (e) => {
-    const $itemName = e.target.closest("li").querySelector(".item-name");
-    $itemName.classList.toggle("done");
-    if ($itemName.classList.contains("done")) {
-      doneListCount();
+  this.init = () => {
+    if(storage.getLocalStorage()) {
+      this.list = storage.getLocalStorage()
     }
+    render()
+  }
+//✅item.done ternary if+
+  const render = () => {
+    const template = this.list[this.currentMenu].map((item, index) => {
+      return `
+      <li data-list-id="${index}" class="todo-item">
+        <span class="${item.done ? 'done' : ''} item-name">${item.title}</span>
+        <div class="item-btn">
+          <button type="button" class="done-btn">완료</button>
+          <button type="button" class="edit-btn">수정</button>
+          <button type="button" class="remove-btn">삭제</button>
+        </div>
+      </li>`
+    }).join(" ")
+
+    toDoList.innerHTML = template
+
+    //list count
+    updatedListCount()
   }
 
-  $("#todo-list").addEventListener("click", (e) => {
+
+  //toDo list add
+  const listInput = document.querySelector('#list')
+  const toDoList = document.querySelector('#todo-list')
+  const listCount = document.querySelector('.list-count')
+  const submitBtn = document.querySelector('.submit')
+
+  const updatedListCount = () => {
+    // const listCountValue = toDoList.querySelectorAll("li").length
+    const listCountValue = this.list[this.currentMenu].length
+    listCount.innerText = `${listCountValue}`
+  }
+
+  const addToDoList = () => {
+    
+    const listInputValue = listInput.value
+
+    if(listInputValue === "") {
+      alert("입력해주세요")
+      return
+    }
+
+    //list add
+    this.list[this.currentMenu].push({ title: listInputValue})
+    storage.setLocalStorage(this.list)
+
+    render()
+
+    //inputValue reset
+    listInput.value = ""
+  }
+
+  submitBtn.addEventListener("click", addToDoList)
+
+  listInput.addEventListener("keydown", (e) => {
+    if(e.key !== "Enter") {
+      return
+    }
+    addToDoList()
+  })
+
+
+  //toDo list modify & toDo list delete
+  const editToDoList = (e) => {
+    //list modify
+    const itemName = e.target.closest('li').querySelector('.item-name') 
+    const updatedItemName = prompt("수정하세요", itemName.innerText)
+
+    const listId = e.target.closest('li').dataset.listId
+    this.list[this.currentMenu][listId].title = updatedItemName
+    storage.setLocalStorage(this.list)
+
+    //rendering
+    itemName.innerText = updatedItemName
+  }
+
+  const removeToDoList = (e) => {
+    //list delete
+    const listId = e.target.closest('li').dataset.listId
+    this.list[this.currentMenu].splice(listId, 1)
+    storage.setLocalStorage(this.list)
+    e.target.closest('li').remove()
+    //list count
+    render()
+  }
+
+  //✅toDo list complete
+  const doneToDoList = (e) => {
+    const listId = e.target.closest('li').dataset.listId
+    this.list[this.currentMenu][listId].done = !this.list[this.currentMenu][listId].done
+    storage.setLocalStorage(this.list)
+    render()
+  }
+
+  toDoList.addEventListener("click", (e) => {
     if(e.target.classList.contains("edit-btn")) {
-      editedItemName(e);
+      editToDoList(e)
+      return
     }
 
     if(e.target.classList.contains("remove-btn")) {
-      removeItemName(e);
+      removeToDoList(e)
+      return
     }
 
     if(e.target.classList.contains("done-btn")) {
-      doneItemName(e);
+      doneToDoList(e)
+      return
     }
-  });
+  })
 
 
-  //form 태그가 자동으로 전송되는 걸 막아준다
-  $(".input-wrap").addEventListener("submit", (e) => {
-    e.preventDefault(); //이벤트 막아주는 
-  });
+  const menuBtn = document.querySelector('.btn-wrap')
 
-  // 메뉴의 이름을 입력받는다
-  $("#list").addEventListener("keypress", (e) => {
-
-    if (e.key !== "Enter") {
-      return;
+  menuBtn.addEventListener("click", (e) => {
+    const isMenuBtn = e.target.classList.contains("menu-btn")
+    if(isMenuBtn) {
+      const menuName = e.target.dataset.menuName
+      this.currentMenu = menuName
+      render()
     }
-
-    if ($("#list").value === "") {
-      alert("입력하세요!")
-      return;
-    }
-
-    if (e.key === "Enter") {
-      const list = $("#list").value;
-      this.listUp.push({ name: list});
-      storage.setLocalStorage(this.listUp);
-      const template = this.listUp.map((item, index) => {
-         return `
-        <li data-list-id="${index}" class="todo-item">
-          <span class="item-name">${item.name}</span>
-          <div class="item-btn">
-            <button type="button" class="done-btn">완료</button>
-            <button type="button" class="edit-btn">수정</button>
-            <button type="button" class="remove-btn">삭제</button>
-          </div>
-        </li>`
-      }).join("");
-
-      //html에 list 추가
-      $("#todo-list").innerHTML = template
-      //목록 추가
-      updatedListCount ();
-      $("#list").value = "";
-    }
-  });
+  })
 }
 
-
-App();
-// const app = new App();
+const app = new App();
+app.init()
