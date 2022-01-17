@@ -5,8 +5,6 @@ body {
 h1 {
   text-align: center;
   margin-top: 20px;
-  height: 80px;
-  overflow: hidden;
 }
 
 .title {
@@ -18,7 +16,7 @@ h1 {
 .btn-wrap {
   display: flex;
   justify-content: center;
-  margin: 20px auto;
+  margin: 5px auto 20px;
   flex-wrap: wrap;
   max-width: 360px;
 }
