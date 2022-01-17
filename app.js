@@ -100,7 +100,7 @@ function App() {
 
   submitBtn.addEventListener("click", addToDoList)
 
-  listInput.addEventListener("keydown", (e) => {
+  listInput.addEventListener("keypress", (e) => {
     if(e.key !== "Enter") {
       return
     }
